@@ -9,7 +9,7 @@ class Heap():
         self.bubble_up()
     
     def remove_top(self):
-        if len(self.data) == 0:
+        if len(self.data) == 1:
             return self.data.pop()
         else:
             top = self.data[0]
@@ -59,6 +59,10 @@ class Heap():
     def peek(self):
         return self.data[0]
     
+    def is_empty(self):
+        return self.size() == 0
+    
+
 if __name__ == '__main__':
     h = Heap(lambda x, y : x > y)
     
