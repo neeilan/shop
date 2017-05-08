@@ -1,57 +1,41 @@
-import urllib.request, json 
-import math
-
-class JSONFetcher():
-    def __init__(self, base_url):
-        self.base_url = base_url
-    
-    def fetch(self, query = {}):
-        query_url = self._build_query_url(query)
-        with urllib.request.urlopen(query_url) as url:
-            data = json.loads(url.read().decode())
-            return data
-
-    def _build_query_url(self, query):
-        if query == {}:
-            query_url = self.base_url
-        else:
-            query_str = '/?'
-            for param in query:
-                query_str += '{0}={1}'.format(param, query[param])
-                query_url = self.base_url + query_str
-        return query_url
-        
-        
-class ShopifyAPI():
-    
-    def __init__(self, api_url):
-        self.api_url = api_url
-        self.fetch = JSONFetcher(api_url).fetch
-        
-    def get_stats(self):
-        return self.fetch()['pagination']
-    
-    def get_orders_on_page(self, page_num = 1):
-        return self.fetch({ 'page' : page_num })['orders']
-    
-    def get_all_orders(self):
-        orders = []
-        stats = self.get_stats()
-        num_pages = math.ceil(stats['total'] / stats['per_page'])
-        
-        for pg_num in range(1, num_pages + 1):
-            orders += self.get_orders_on_page(pg_num)
-            
-        return orders
+from shopify_api import ShopifyAPI
+from heap import Heap
 
 class ShopifySolution():
     
     def __init__(self, api_url):
-        self.orders = [order for order in ShopifyAPI(api_url).get_all_orders()]
+        api = ShopifyAPI(api_url)
+        self.api = api
+        self.orders = api.get_unfulfilled_orders()
+        
+        import random
+        random.shuffle(self.orders)        
+
+        self.available_cookies = api.get_stats().available_cookies
+        self.priority_queue = Heap(self.compare_orders) 
         
     def print_result(self):
-        pass
+        for order in self.orders:
+            self.priority_queue.insert(order)
+            
+        return self.orders
+    
+
+    
+    def compare_orders(self, a, b):
+        a_cookies = a.count_amount('Cookies')
+        b_cookies = b.count_amount('Cookies')
+        
+        if a_cookies > b_cookies:
+            return 1
+        if (a_cookies == b_cookies and a.id < b.id):
+            return 1
+        return -1
     
 api_url = 'https://backend-challenge-fall-2017.herokuapp.com/orders.json'
     
 s = ShopifySolution(api_url)
+s.print_result()
+orders = s.orders
+pq = s.priority_queue.data
+print('..')
