@@ -7,5 +7,6 @@ class Order():
             
     def __init__(self, summary):
         self.id = summary['id']
-        self.fulfilled = True if summary['fulfilled'] == 'true' else False
+        self.customer_email = summary['customer_email']
+        self.fulfilled = summary['fulfilled']
         self.products = [ self.Product(product) for product in summary['products'] ]
