@@ -10,3 +10,10 @@ class Order():
         self.customer_email = summary['customer_email']
         self.fulfilled = summary['fulfilled']
         self.products = [ self.Product(product) for product in summary['products'] ]
+        self.count = len(self.products)
+        
+    def count_amount(self, item_name):
+        for product in self.products:
+            if product.title == item_name:
+                return product.amount
+        return 0
