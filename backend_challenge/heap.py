@@ -50,7 +50,7 @@ class Heap():
             # swap with left child if necessary
             if self.compare(A[i], left) < 0:
                 A[i], A[i * 2] = A[i * 2], A[i]
-                return 2 * i
+                return 2 * i + 1
         return None
 
     def size(self):
