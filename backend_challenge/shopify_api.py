@@ -6,9 +6,9 @@ class ShopifyAPI():
     
     class StatReport():
         def __init__(self, api_response):
-            self.available_cookies = api_response['available_cookies']
-            self.total = api_response['pagination']['total']
-            self.per_page = api_response['pagination']['per_page']
+            self.available_cookies = int(api_response['available_cookies'])
+            self.total = int(api_response['pagination']['total'])
+            self.per_page = int(api_response['pagination']['per_page'])
     
     def __init__(self, api_url):
         self.api_url = api_url
