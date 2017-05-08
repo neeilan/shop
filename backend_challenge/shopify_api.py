@@ -30,3 +30,6 @@ class ShopifyAPI():
             orders += self.get_orders_on_page(pg_num)
             
         return orders
+    
+    def get_unfulfilled_orders(self):
+        return [order for order in self.get_all_orders() if not order.fulfilled]
