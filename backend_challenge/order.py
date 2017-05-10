@@ -1,9 +1,16 @@
 class Order():
+    '''
+    Consists of id (str), customer_email (str), fulfilled (bool), count(int)
+    and products ([Product])
+    '''
     
     class Product():
+        '''
+        Consists of title (str) and amount (int)
+        '''
         def __init__(self, p_summary):
             self.title = p_summary['title']
-            self.amount = p_summary['amount']
+            self.amount = int(p_summary['amount'])
             
     def __init__(self, summary):
         self.id = summary['id']
